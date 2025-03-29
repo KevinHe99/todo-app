@@ -14,7 +14,7 @@ public class Task {
     private Long id;
 
     @NotBlank(message = "Title must not be blank!")
-    private String title;
+    private String text;
 
     private boolean completed;
 
@@ -31,12 +31,12 @@ public class Task {
         return id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getText() {
+        return text;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public boolean isCompleted() {

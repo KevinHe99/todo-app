@@ -32,7 +32,7 @@ public class TaskService {
 
     public Task updateTask(Long id, Task taskUpdate) {
         Task task = getTaskById(id);
-        task.setTitle(taskUpdate.getTitle());
+        task.setText(taskUpdate.getText());
         task.setCompleted(taskUpdate.isCompleted());
         task.setUpdatedAt(LocalDateTime.now());
         return taskRepository.save(task);
