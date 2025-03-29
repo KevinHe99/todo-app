@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import './App.css'
 import { Trash2, Check } from "lucide-react";
 
@@ -11,11 +11,32 @@ function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [newTask, setNewTask] = useState<string>("");
 
-    const addTask = (): void => {
+    const addTask = async (): Promise<void> => {
         if (newTask.trim() === "") return;
-        setTasks([...tasks, { text: newTask, completed: false }]);
+
+        const newTaskObj = { text: newTask, completed: false };
+        setTasks([...tasks, newTaskObj ]);
         setNewTask("");
-        console.log(newTask);
+
+        try {
+            const response = await fetch("http://localhost:8080/api/tasks", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newTaskObj),
+            })
+
+            if (!response.ok) {
+                throw new Error("Failed to add task to server");
+            }
+
+            const data = await response.json();
+            console.log("Task created on the server", data)
+        } catch (error) {
+            console.error("Failed to add task to server", error)
+            // display, handle task
+        }
     };
 
     const toggleComplete = (index: number): void => {
