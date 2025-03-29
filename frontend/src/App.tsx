@@ -8,6 +8,8 @@ interface TaskData {
     completed: boolean;
 }
 
+const urlString = "http://localhost:8120"
+
 function App() {
     const [tasksObj, setTasksObj] = useState<TaskData[]>([]);
     const [newTaskObj, setNewTaskObj] = useState<string>("");
@@ -15,7 +17,7 @@ function App() {
     useEffect(() => {
         const fetchTasks = async() => {
             try {
-                const response = await fetch("http://localhost:8080/api/tasks");
+                const response = await fetch(urlString + "/api/tasks");
 
                 if (!response.ok) {
                     throw new Error("Failed to fetch tasks");
@@ -39,7 +41,7 @@ function App() {
         setNewTaskObj("");
 
         try {
-            const response = await fetch("http://localhost:8080/api/tasks", {
+            const response = await fetch(urlString + "/api/tasks", {
                 method: "POST",
                 headers: {
                     "Content-Type" : "application/json",
@@ -63,12 +65,12 @@ function App() {
     const toggleComplete = async (index: number): Promise<void> => {
         const getTask = tasksObj.find((task) => task.id === index);
 
-        if (!getTask) return; 
+        if (!getTask) return;
 
         const newTaskForm = {text: getTask.text, completed: !getTask.completed};
 
         try {
-            const response = await fetch("http://localhost:8080/api/tasks/"+index, {
+            const response = await fetch(urlString + "/api/tasks/"+index, {
                 method: "PUT",
                 headers: {
                     "Content-Type" : "application/json",
@@ -92,7 +94,7 @@ function App() {
 
     const deleteTask = async (index: number): Promise<void> => {
         try {
-            const response = await fetch("http://localhost:8080/api/tasks/" + index, {
+            const response = await fetch(urlString + "/api/tasks/" + index, {
                 method: "DELETE",
                 headers:  {
                     "Content-Type" : "application/json",

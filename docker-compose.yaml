@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+ backend:
+  container_name: backend
+
+  build: ./backend/
+
+  networks:
+   - my_network
+
+  ports:
+   - "8120:8120"
+
+
+ frontend:
+  container_name: frontend
+
+  build: ./frontend/
+
+  networks:
+   - my_network
+
+  ports:
+   - "8122:8122"
+
+networks:
+  my_network:
