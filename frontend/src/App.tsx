@@ -11,6 +11,24 @@ function App() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [newTask, setNewTask] = useState<string>("");
 
+    useEffect(() => {
+        const fetchTasks = async() => {
+            try {
+                const response = await fetch("http://localhost:8080/api/tasks");
+
+                if (!response.ok) {
+                    throw new Error("Failed to fetch tasks");
+                }
+
+                const data = await response.json();
+                setTasks(data);
+            }catch (error) {
+                console.error("Failed to fetch tasks", error);
+            }
+        }
+        fetchTasks();
+    }, []) // empty, means load once on load
+
     const addTask = async (): Promise<void> => {
         if (newTask.trim() === "") return;
 
