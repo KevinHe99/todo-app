@@ -1,47 +1,58 @@
-version: "3.8"
-
 services:
-    backend:
-        container_name: backend
+  database:
+    container_name: db-postgres
+    image: postgres:17.4
 
-        build: ./backend/
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=tododb
 
-        networks:
-            - my_network
+    networks:
+      - my_network
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data/
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U docker -d tododb'"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
 
-        ports:
-            - "8120:8120"
+  backend:
+    container_name: backend
+    build: ./backend/
+
+    networks:
+      - my_network
+    expose:
+      - "8120"
+    ports:
+      - "8120:8120"
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+
+  frontend:
+    container_name: frontend
+    build: ./frontend/
+
+    networks:
+      - my_network
+    ports:
+      - "8122:8122"
 
 
-    frontend:
-        container_name: frontend
 
-        build: ./frontend/
-
-        networks:
-            - my_network
-
-        ports:
-            - "8122:8122"
-
-    database:
-        container_name: db-postgres
-        
-        image: postgres
-
-        environment:
-            POSTGRES_BD: tododb
-            POSTGRES_USER: postgres
-            POSTGRES_PASSWORD: postgres
-
-        ports:
-            - "5432:5432"
-
-        volumes:
-        - pg_data:/var/lib/postgresql/data
 
 networks:
-    my_network:
+  my_network:
 
 volumes:
-    pg_data:
+  postgresql_data:
