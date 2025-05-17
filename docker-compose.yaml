@@ -1,6 +1,6 @@
 services:
   database:
-    container_name: db-postgres
+    container_name: db-pgsql-6392c
     image: postgres:17.4
 
     environment:
@@ -25,7 +25,7 @@ services:
       timeout: 10s
 
   backend:
-    container_name: backend
+    container_name: backend-6392c
     build: ./backend/
 
     networks:
@@ -40,7 +40,7 @@ services:
         restart: true
 
   frontend:
-    container_name: frontend
+    container_name: frontend-6392c
     build: ./frontend/
 
     networks:
